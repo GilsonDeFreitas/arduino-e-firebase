@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>        
+        <title>Monitoramento-Arduino-e-Firebase</title>
+		<meta charset = "utf-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>          
+		<script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+
+        <style>			
+			h1.TC118_ALARME{margin-top: 5%; color: white; font-family: Verdana;}
+			button.BC118_ALARME{font-size: 3em; font-family: Verdana; padding: 5px; color: black}
+			
+			h1.TALARME_INTRUSO{margin-top: 5%; background-color: red; color: white; font-family: Verdana; font-size: 300%}
+
+			h1.TC118_LUZ_B1{margin-top: 5%; color: white; font-family: Verdana;}
+			button.BC118_LUZ_B1{ font-size: 3em; font-family: Verdana; padding: 5px; color: black}
+
+			h1.TC118_LUZ_C1{margin-top: 5%; color: white; font-family: Verdana;}
+			button.BC118_LUZ_C1{ font-size: 3em; font-family: Verdana; padding: 5px; color: black}
+			
+			h1.TC118_LUZ_J1{margin-top: 5%; color: white; font-family: Verdana;}
+			button.BC118_LUZ_J1{ font-size: 3em; font-family: Verdana; padding: 5px; color: black}
+
+			h1.TC118_LUZ_Q1{margin-top: 5%; color: white; font-family: Verdana;}
+			button.BC118_LUZ_Q1{ font-size: 3em; font-family: Verdana; padding: 5px; color: black}
+
+			h1.TC118_LUZ_Q2{margin-top: 5%; color: white; font-family: Verdana;}
+			button.BC118_LUZ_Q2{ font-size: 3em; font-family: Verdana; padding: 5px; color: black}
+			
+			h1.TC118_LUZ_S1{margin-top: 5%; color: white; font-family: Verdana;}
+			button.BC118_LUZ_S1{ font-size: 3em; font-family: Verdana; padding: 5px; color: black}
+			
+			h1.TC118_LUZ_TODAS{margin-top: 5%; color: white; font-family: Verdana;}
+			button.BC118_LUZ_TODAS_ON{ font-size: 3em; font-family: Verdana; padding: 5px; color: black}
+			button.BC118_LUZ_TODAS_OF{ font-size: 3em; font-family: Verdana; padding: 5px; color: black}
+			
+			
+			h1.TC118_POR_B1{margin-top: 5%; color: white; font-family: Verdana;}			
+			h1.TC118_POR_C1{margin-top: 5%; color: white; font-family: Verdana;}			
+			h1.TC118_POR_Q1{margin-top: 5%; color: white; font-family: Verdana;}
+			h1.TC118_POR_Q2{margin-top: 5%; color: white; font-family: Verdana;}
+			h1.TC118_POR_S1{margin-top: 5%; color: white; font-family: Verdana;}
+			h1.TC118_HUM_J1{margin-top: 5%; color: white; font-family: Verdana;}
+			h1.TC118_TEM_J1{margin-top: 5%; color: white; font-family: Verdana;}
+						
+			table, th, td {font-family: Verdana; color: white; border: 1px solid black; padding: 5px;}
+			table {border-spacing: 15px;}
+        </style>    
+    
+        <!-- <script src="script.js"></script> -->
+        <script>
+        // Initialize Firebase
+        var config = {
+		apiKey: "AIzaSyCKLPrTIfoSUDl2Ev9R_y5FRF2fq_livlI",
+		authDomain: "arduino-e-firebase.firebaseapp.com",
+		databaseURL: "https://arduino-e-firebase.firebaseio.com",
+		projectId: "arduino-e-firebase",
+		storageBucket: "arduino-e-firebase.appspot.com",
+		messagingSenderId: "982821386810"
+		};        
+        firebase.initializeApp(config);
+        
+		/*Inicio - Função de Leitura da Página HTML*/
+        $(document).ready(function()
+        {			
+			var database = firebase.database();
+			var 
+     		  WC118_ALARME,
+			  WC118_LUZ_B1,
+			  WC118_LUZ_C1,
+			  WC118_LUZ_J1,
+			  WC118_LUZ_Q1,
+			  WC118_LUZ_Q2,
+			  WC118_LUZ_S1,
+			  WC118_LUZ_TODAS,
+			  WC118_POR_B1,
+			  WC118_POR_C1,
+			  WC118_POR_Q1,
+			  WC118_POR_Q2,
+			  WC118_POR_S1,
+			  WC118_HUM_J1,
+			  WC118_TEM_J1;
+        
+			/*Fim - Leitura das variaveis que estão na Nuvem: Google Firebase*/
+			database.ref().on("value", function(snap)
+			{
+				WC118_ALARME    = snap.val().C118_ALARME;
+				WC118_LUZ_B1    = snap.val().C118_LUZ_B1;
+				WC118_LUZ_C1    = snap.val().C118_LUZ_C1;
+				WC118_LUZ_J1    = snap.val().C118_LUZ_J1;
+				WC118_LUZ_Q1    = snap.val().C118_LUZ_Q1;
+				WC118_LUZ_Q2    = snap.val().C118_LUZ_Q2;
+				WC118_LUZ_S1    = snap.val().C118_LUZ_S1;
+				WC118_LUZ_TODAS = snap.val().C118_LUZ_TODAS;
+				WC118_POR_B1    = snap.val().C118_POR_B1;
+				WC118_POR_C1    = snap.val().C118_POR_C1;
+				WC118_POR_Q1    = snap.val().C118_POR_Q1;
+				WC118_POR_Q2    = snap.val().C118_POR_Q2;
+				WC118_POR_S1    = snap.val().C118_POR_S1;
+				WC118_HUM_J1    = snap.val().C118_HUM_J1 + "%";
+				WC118_TEM_J1    = snap.val().C118_TEM_J1 + "ºC";
+
+				if (WC118_ALARME == 1){
+					$(".TC118_ALARME").text("Ativado");
+				}else{
+					$(".TC118_ALARME").text("Desativado");
+				}
+
+				if (WC118_LUZ_B1 == 1){
+					$(".TC118_LUZ_B1").text("Ligada");
+				}else{
+					$(".TC118_LUZ_B1").text("Desligada");
+				}
+
+				if (WC118_LUZ_C1 == 1){
+					$(".TC118_LUZ_C1").text("Ligada");
+				}else{
+					$(".TC118_LUZ_C1").text("Desligada");
+				}		
+
+				if (WC118_LUZ_J1 == 1){
+					$(".TC118_LUZ_J1").text("Ligada");
+				}else{
+					$(".TC118_LUZ_J1").text("Desligada");
+				}		
+
+				if (WC118_LUZ_Q1 == 1){
+					$(".TC118_LUZ_Q1").text("Ligada");
+				}else{
+					$(".TC118_LUZ_Q1").text("Desligada");
+				}		
+
+				if (WC118_LUZ_Q2 == 1){
+					$(".TC118_LUZ_Q2").text("Ligada");
+				}else{
+					$(".TC118_LUZ_Q2").text("Desligada");
+				}		
+
+				if (WC118_LUZ_S1 == 1){
+					$(".TC118_LUZ_S1").text("Ligada");
+				}else{
+					$(".TC118_LUZ_S1").text("Desligada");
+				}
+
+				if (WC118_LUZ_TODAS == 0){
+					$(".TC118_LUZ_TODAS").text("Todas as luzes foram Desligadas");
+				}else if (WC118_LUZ_TODAS == 1) {
+					$(".TC118_LUZ_S1").text("Todas as luzes forma ligadas");
+				}else{
+					$(".TC118_LUZ_TODAS").text("Luzes em modo Manual");
+				}
+
+				if (WC118_POR_B1 == 1){
+					$(".TC118_POR_B1").text("Aberta");
+				}else{
+					$(".TC118_POR_B1").text("Fechada");
+				}
+
+				if (WC118_POR_C1 == 1){
+					$(".TC118_POR_C1").text("Aberta");
+				}else{
+					$(".TC118_POR_C1").text("Fechada");
+				}
+
+				if (WC118_POR_Q1 == 1){
+					$(".TC118_POR_Q1").text("Aberta");
+				}else{
+					$(".TC118_POR_Q1").text("Fechada");
+				}
+
+				if (WC118_POR_Q2 == 1){
+					$(".TC118_POR_Q2").text("Aberta");
+				}else{
+					$(".TC118_POR_Q2").text("Fechada");
+				}
+
+				if (WC118_POR_S1 == 1){
+					$(".TC118_POR_S1").text("Aberta");
+				}else{
+					$(".TC118_POR_S1").text("Fechada");
+				}	
+
+				$(".TC118_HUM_J1").text(WC118_HUM_J1);
+				$(".TC118_TEM_J1").text(WC118_TEM_J1);
+
+
+				if (WC118_ALARME == 1)
+				{
+					if (WC118_POR_C1 == 1 || WC118_POR_S1 == 1){
+						if (WC118_POR_C1 == 0 && WC118_POR_S1 == 1){
+							$(".TALARME_INTRUSO").text("Violação de acesso pela porta da Sala");
+						}
+						if (WC118_POR_C1 == 1 && WC118_POR_S1 == 0){
+							$(".TALARME_INTRUSO").text("Violação de acesso pela porta da Cozinha");
+						}
+						if (WC118_POR_C1 == 1 && WC118_POR_S1 == 1){
+							$(".TALARME_INTRUSO").text("Violação de acesso pelas portas da Cozinha e da Sala");
+						}
+					}else{
+						$(".TALARME_INTRUSO").text("");
+					}	
+				}else{
+				  $(".TALARME_INTRUSO").text("");
+				}			
+			});
+			/*Fim - Leitura das variaveis que estão na Nuvem: Google Firebase*/
+        
+		
+			/*Inicio - Controle das variaveis que estão na Nuvem: Google Firebase*/
+			$(".BC118_ALARME").click(function()
+			{
+				var firebaseC118_ALARME = firebase.database().ref().child("C118_ALARME");
+				if (WC118_ALARME == 1){                
+					firebaseC118_ALARME.set(0);
+					WC118_ALARME = 0;  
+				} else {
+					firebaseC118_ALARME.set(1);
+					WC118_ALARME = 1;
+				}
+			});
+
+			$(".BC118_LUZ_B1").click(function()
+			{
+				var firebaseC118_LUZ_B1 = firebase.database().ref().child("C118_LUZ_B1");
+				if (WC118_LUZ_B1 == 1){                
+					firebaseC118_LUZ_B1.set(0);
+					WC118_LUZ_B1 = 0;  
+				} else {
+					firebaseC118_LUZ_B1.set(1);
+					WC118_LUZ_B1 = 1;
+				}
+			});
+
+			$(".BC118_LUZ_C1").click(function()
+			{
+				var firebaseC118_LUZ_C1 = firebase.database().ref().child("C118_LUZ_C1");
+				if (WC118_LUZ_C1 == 1){                
+					firebaseC118_LUZ_C1.set(0);
+					WC118_LUZ_C1 = 0;  
+				} else {
+					firebaseC118_LUZ_C1.set(1);
+					WC118_LUZ_C1 = 1;
+				}
+			});
+
+			$(".BC118_LUZ_J1").click(function()
+			{
+				var firebaseC118_LUZ_J1 = firebase.database().ref().child("C118_LUZ_J1");
+				if (WC118_LUZ_J1 == 1){                
+					firebaseC118_LUZ_J1.set(0);
+					WC118_LUZ_J1 = 0;  
+				} else {
+					firebaseC118_LUZ_J1.set(1);
+					WC118_LUZ_J1 = 1;
+				}
+			});
+
+			$(".BC118_LUZ_Q1").click(function()
+			{
+				var firebaseC118_LUZ_Q1 = firebase.database().ref().child("C118_LUZ_Q1");
+				if (WC118_LUZ_Q1 == 1){                
+					firebaseC118_LUZ_Q1.set(0);
+					WC118_LUZ_Q1 = 0;  
+				} else {
+					firebaseC118_LUZ_Q1.set(1);
+					WC118_LUZ_Q1 = 1;
+				}
+			});
+
+			$(".BC118_LUZ_Q2").click(function()
+			{
+				var firebaseC118_LUZ_Q2 = firebase.database().ref().child("C118_LUZ_Q2");
+				if (WC118_LUZ_Q2 == 1){                
+					firebaseC118_LUZ_Q2.set(0);
+					WC118_LUZ_Q2 = 0;  
+				} else {
+					firebaseC118_LUZ_Q2.set(1);
+					WC118_LUZ_Q2 = 1;
+				}
+			});
+
+			$(".BC118_LUZ_S1").click(function()
+			{
+				var firebaseC118_LUZ_S1 = firebase.database().ref().child("C118_LUZ_S1");
+				if (WC118_LUZ_S1 == 1){                
+					firebaseC118_LUZ_S1.set(0);
+					WC118_LUZ_S1 = 0;  
+				} else {
+					firebaseC118_LUZ_S1.set(1);
+					WC118_LUZ_S1 = 1;
+				}
+			});
+
+			  
+			$(".BC118_LUZ_TODAS_ON").click(function()
+			{
+				var firebaseC118_LUZ_B1 = firebase.database().ref().child("C118_LUZ_B1");
+				var firebaseC118_LUZ_C1 = firebase.database().ref().child("C118_LUZ_C1");
+				var firebaseC118_LUZ_J1 = firebase.database().ref().child("C118_LUZ_J1");
+				var firebaseC118_LUZ_Q1 = firebase.database().ref().child("C118_LUZ_Q1");
+				var firebaseC118_LUZ_Q2 = firebase.database().ref().child("C118_LUZ_Q2");
+				var firebaseC118_LUZ_S1 = firebase.database().ref().child("C118_LUZ_S1");
+				
+				firebaseC118_LUZ_B1.set(1); WC118_LUZ_B1 = 1;
+				firebaseC118_LUZ_C1.set(1); WC118_LUZ_C1 = 1;
+				firebaseC118_LUZ_J1.set(1); WC118_LUZ_J1 = 1;
+				firebaseC118_LUZ_Q1.set(1); WC118_LUZ_Q1 = 1;
+				firebaseC118_LUZ_Q2.set(1); WC118_LUZ_Q2 = 1;
+				firebaseC118_LUZ_S1.set(1); WC118_LUZ_S1 = 1;
+			});
+
+			$(".BC118_LUZ_TODAS_OF").click(function()
+			{
+				var firebaseC118_LUZ_B1 = firebase.database().ref().child("C118_LUZ_B1");
+				var firebaseC118_LUZ_C1 = firebase.database().ref().child("C118_LUZ_C1");
+				var firebaseC118_LUZ_J1 = firebase.database().ref().child("C118_LUZ_J1");
+				var firebaseC118_LUZ_Q1 = firebase.database().ref().child("C118_LUZ_Q1");
+				var firebaseC118_LUZ_Q2 = firebase.database().ref().child("C118_LUZ_Q2");
+				var firebaseC118_LUZ_S1 = firebase.database().ref().child("C118_LUZ_S1");
+				
+				firebaseC118_LUZ_B1.set(0); WC118_LUZ_B1 = 0;
+				firebaseC118_LUZ_C1.set(0); WC118_LUZ_C1 = 0;
+				firebaseC118_LUZ_J1.set(0); WC118_LUZ_J1 = 0;
+				firebaseC118_LUZ_Q1.set(0); WC118_LUZ_Q1 = 0;
+				firebaseC118_LUZ_Q2.set(0); WC118_LUZ_Q2 = 0;
+				firebaseC118_LUZ_S1.set(0); WC118_LUZ_S1 = 0;
+			});
+			/*Fim - Controle das variaveis que estão na Nuvem: Google Firebase*/
+		});
+		/*Fim - Função de Leitura da Página HTML*/		
+		</script>
+    </head>
+
+    <body style="text-align: center; background-color: #2E8020">
+	
+		<br>
+		<br>
+		<table class="table"; style="width:100%">
+		  <tr>
+			<!-- <td width=300px;> <img src="000-Logo.jpg" class="img-rounded" width="100" height="60"> </td> -->			
+			<td>
+				<h1> <p >Ebook: Arduino e Firebase</p> </h1>
+				<h2> <p >Monitore e controle os sua casa através da placa ESP8266</p> </h2>
+				<h3> <p >Autor: Gilson de Freitas</p> </h3>
+				<h3> <p>Curso 1:<a href="https://www.udemy.com/arduino-referencia-de-programacao/"> Link do Curso de Arduino </a> </p> </h3>
+				<h3> <p>Curso 2:<a href="https://www.udemy.com/mobirise-crie-teu-site-e-publique-em-1-semana/"> Link do curso de Mobirise </a> </p> </h3>
+				<h3> <p>Ebook:<a href="https://www.udemy.com/mobirise-crie-teu-site-e-publique-em-1-semana/"> Link do Ebook - Arduino e Firebase </a> </p> </h3>
+			</td>				
+		  </tr>
+		</table>
+
+		<br>
+		<br>
+			<h1 class="TALARME_INTRUSO"></h1>	
+		<br>
+		<br>
+		
+		<table style="width:100%">
+		  <tr>
+			<th> <h1> <B> NOME DO COMPONENTE </B> </h1> </th>
+			<th> <h1> <B> SITUAÇÃO </B> </h1> </th> 
+			<th> <h1> <B> CONTROLE </B> </h1> </th>
+		  </tr>
+		  <tr>
+			<td> <h1> Alarme </h1> </td>
+			<td> <h1 class="TC118_ALARME">Alarme</h1> </td>
+			<td> <button class="BC118_ALARME" > ON/OF </button> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> Ligar todas as Luzes </h1> </td>
+			<td> <h1 class="TC118_LUZ_TODAS"> </h1> </td>
+			<td> <button class="BC118_LUZ_TODAS_ON" > --ON-- </button> </td>				
+		  </tr>
+		  <tr>
+			<td> <h1> Desligar todas as Luzes </h1> </td>
+			<td> <h1 class="TC118_LUZ_TODAS"> </h1> </td>
+			<td> <button class="BC118_LUZ_TODAS_OF" > --OF-- </button> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> Luz do Banheiro 1 </h1> </td>
+			<td> <h1 class="TC118_LUZ_B1"> </h1> </td>
+			<td> <button class="BC118_LUZ_B1" > OF/OF </button> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> Luz da Cozinha 1 </h1> </td>
+			<td> <h1 class="TC118_LUZ_C1"> </h1> </td>
+			<td> <button class="BC118_LUZ_C1" > OF/OF </button> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> Luz do Jardim 1 </h1> </td>
+			<td> <h1 class="TC118_LUZ_J1"> </h1> </td>
+			<td> <button class="BC118_LUZ_J1" > OF/OF </button> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> Luz do Quarto 1 </h1> </td>
+			<td> <h1 class="TC118_LUZ_Q1"> </h1> </td>
+			<td> <button class="BC118_LUZ_Q1" > OF/OF </button> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> Luz do Quarto 2 </h1> </td>
+			<td> <h1 class="TC118_LUZ_Q2"> </h1> </td>
+			<td> <button class="BC118_LUZ_Q2" > OF/OF </button> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> Luz da Sala 1 </h1> </td>
+			<td> <h1 class="TC118_LUZ_S1"> </h1> </td>
+			<td> <button class="BC118_LUZ_S1" > OF/OF </button> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> - </h1> </td>
+			<td> <h1> - </h1> </td>
+			<td> <h1> - </h1> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> Porta do Banheiro 1 </h1> </td>
+			<td> <h1 class="TC118_POR_B1"> </h1> </td>
+			<td></td>
+		  </tr>
+		  <tr>
+			<td> <h1> Porta da Cozinha 1 </h1> </td>
+			<td> <h1 class="TC118_POR_C1"> </h1> </td>
+			<td></td>
+		  </tr>
+		  <tr>
+			<td> <h1> Porta do Quarto 1 </h1> </td>
+			<td> <h1 class="TC118_POR_Q1"> </h1> </td>
+			<td></td>
+		  </tr>
+		  <tr>
+			<td> <h1> Porta do Quarto 2 </h1> </td>
+			<td> <h1 class="TC118_POR_Q2"> </h1> </td>
+			<td></td>
+		  </tr>
+		  <tr>
+			<td> <h1> - </h1> </td>
+			<td> <h1> - </h1> </td>
+			<td> <h1> - </h1> </td>
+		  </tr>
+		  <tr>
+			<td> <h1> Humidade relativa do ar </h1> </td>
+			<td> <h1 class="TC118_HUM_J1"> </h1> </td>
+			<td></td>
+		  </tr>
+		  <tr>
+			<td> <h1> Temperatura Externa </h1> </td>
+			<td> <h1 class="TC118_TEM_J1"> </h1> </td>
+			<td></td>
+		  </tr>
+
+		</table>			
+    </body>
+
+</html>
+
+
+
